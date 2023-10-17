@@ -1,0 +1,282 @@
+@extends('layouts.admin_master')
+@push('css')
+<style>
+    .header_right {
+
+        padding-right: 15px;
+        padding-top: 5px;
+    }
+
+    .dark-mode input:-webkit-autofill {
+        -webkit-text-fill-color: #000;
+    }
+
+    .table td {
+        padding: 5px 15px;
+    }
+
+    .table td p {
+        margin: 0px;
+        padding-bottom: 3px;
+    }
+</style>
+@endpush
+@section('main_content')
+
+
+<div class="card-header">
+    <div class="row">
+        <div class="col-md-8">
+            <h3><b>Edit User Role</b></h3>
+        </div>
+        <div class="col-md-4 text-right header_right">
+
+
+        </div>
+    </div>
+</div>
+<div class="card-body">
+
+
+    <form class="form" action="{{route('user_role.update')}}" method="post">
+        @csrf
+        <div class="row ">
+            <div class="col-md-12 mb-3">
+                <label for="add_name">Role Name</label>
+                <input type="text" name="name" class="form-control text-default" required autocomplete="off" value="{{$user_role->name}}" placeholder="User Role">
+
+                <input type="hidden" name="role_id" value="{{$user_role->id}}">
+            </div>
+
+            <div class="col-md-12">
+                <div class="row" style="border:1px solid #6c757d; border-radius:5px; padding:8px; margin: 10px 0px" class="text-center">
+                    <div class="col-md-5">
+                    <input type="checkbox" id="checkAll"> All permission
+                   
+                    </div>
+                    <div class="col-md-7">
+                    <h4>Permissions </h4>
+                    </div>
+                </div>
+               
+
+                <table class="table table-striped table-hover table-bordered" style="width: 100%; margin:auto" id="permission_table">
+                    @foreach ($groupedData as $groupName => $groupedItems)
+                    <tr>
+                        <td style="vertical-align: middle; width:30%;">
+                            <p>
+                                <input style="margin-right: 8px;" type="checkbox" value="{{$groupName}}" class="check_for_all_group" id="{{$groupName}}" onclick="groupCheck('{{$groupName}}')">
+                                {{$groupName}}
+                            </p>
+                        </td>
+                        <td>
+                            @foreach ($groupedItems as $item)
+                            <p>
+                                <input style="margin-right: 8px;" type="checkbox" name="permissions[]" value="{{$item->id}}" class="check_for_all sin_{{$groupName}}" onclick="singleCheck('{{$groupName}}')" @if(in_array($item->id, $role_has_permissions)) checked @endif >
+                                {{$item->name}}
+                            </p>
+
+                            @endforeach
+                        </td>
+                    </tr>
+                    @endforeach
+
+                </table>
+
+
+            </div>
+            <div class="col-md-12 text-right">
+                <button type="submit" class="btn btn-sm btn-success mt-3"> Update </button>
+            </div>
+
+
+
+
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+@endsection
+
+@push('js')
+
+<script>
+
+
+    // Start All permission check uncheck
+
+    $('#checkAll').click(function() {
+
+        $('input:checkbox').prop('checked', this.checked);
+    });
+
+    // End
+
+
+    // Start All permission uncheck when atlist a single checkbox will be unchecked
+    $('.check_for_all').click(function() {
+
+        var checkboxForAll = $('.check_for_all:checkbox');
+
+        var allChecked = true;
+
+        checkboxForAll.each(function(e) {
+            if (!$(this).prop('checked')) {
+                allChecked = false;
+                return false;
+            }
+        });
+
+        if (allChecked) {
+
+            $('#checkAll').prop('checked', true);
+        } else {
+
+            $('#checkAll').prop('checked', false);
+        }
+
+
+    });
+    $('.check_for_all_group').click(function() {
+
+        var checkboxForAll = $('.check_for_all:checkbox');
+
+        var allChecked = true;
+
+        checkboxForAll.each(function(e) {
+            if (!$(this).prop('checked')) {
+                allChecked = false;
+                return false;
+            }
+        });
+
+        if (allChecked) {
+
+            $('#checkAll').prop('checked', true);
+        } else {
+
+            $('#checkAll').prop('checked', false);
+        }
+
+
+    });
+
+    // End
+
+
+    // Start Group wish single checkbox ckeched and uncheck
+
+    function groupCheck(name) {
+
+
+        var grouped = $('#' + name + ':checkbox');
+
+        var single = $('.sin_' + name + ':checkbox');
+
+        if (grouped.prop('checked')) {
+
+            single.prop('checked', true);
+        } else {
+
+            single.prop('checked', false);
+        }
+
+    }
+
+    // End
+
+
+    // Start Group checkbox uncheck when atlist a single checkbox will be unchecked from his own group
+    function singleCheck(name) {
+
+        var grouped = $('#' + name + ':checkbox');
+
+        var single = $('.sin_' + name + ':checkbox');
+
+        var groupedAllChecked = true;
+        single.each(function() {
+            if (!$(this).prop('checked')) {
+                groupedAllChecked = false;
+                return false; // Exit the loop early if one checkbox is not checked
+            }
+        });
+
+        if (groupedAllChecked) {
+
+            grouped.prop('checked', true);
+        } else {
+
+            grouped.prop('checked', false);
+        }
+
+    }
+
+    // End
+
+
+    $(document).ready(function() {
+
+
+        var checkboxForAll = $('.check_for_all:checkbox');
+
+        var allChecked = true;
+
+        checkboxForAll.each(function(e) {
+            if (!$(this).prop('checked')) {
+                allChecked = false;
+                return false; // Exit the loop early if one checkbox is not checked
+            }
+        });
+
+        if (allChecked) {
+
+            $('#checkAll').prop('checked', true);
+        } else {
+
+            $('#checkAll').prop('checked', false);
+        }
+
+
+
+
+        var table = document.getElementById('permission_table');
+        for (var i = 0; i < table.rows.length; i++) {
+            var firstCol = table.rows[i].cells[0]; // First column
+            // firstCol.style.color = 'red'; // Set text color of the first column to red
+
+            var secondCol = table.rows[i].cells[1]; // Second column
+
+            var firstGroupCheckboxes = $(firstCol).find('input:checkbox');
+            var secondGroupCheckboxes = $(secondCol).find('input:checkbox');
+
+            var groupedAllChecked = true;
+            secondGroupCheckboxes.each(function() {
+                if (!$(this).prop('checked')) {
+                    groupedAllChecked = false;
+                    return false; // Exit the loop early if one checkbox is not checked
+                }
+            });
+
+            if (groupedAllChecked) {
+
+                firstGroupCheckboxes.prop('checked', true);
+            } else {
+
+                firstGroupCheckboxes.prop('checked', false);
+            }
+        }
+
+
+
+
+
+
+    });
+</script>
+
+@endpush

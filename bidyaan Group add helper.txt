@@ -1,0 +1,439 @@
+  var old_class_id = '<?php echo $schedule->class_id; ?>'??'';
+
+            var group = '<?php echo $schedule->group; ?>'??'';
+-----------------
+    $.ajax({       
+
+            type   : "POST",
+
+            url    : "<?php echo site_url('ajax/get_group_by_class'); ?>",
+
+            data   : { school_id:school_id, class_id : class_id , group : group, old_class_id : old_class_id },            
+            async  : false,
+
+            success: function(response){                                                   
+
+            if(response) {
+
+                    if(response !='no'){
+                        
+                    if(edit){
+
+                        $('#display_edit_group_').show();
+                        
+                        $('#edit_group').html(response);
+
+                        if(class_id !=old_class_id){
+
+                            $('#edit_subject_id').val('');
+
+                        }
+                        
+
+                    }else{
+
+                        $('#display_add_group_').show();
+                        
+                        $('#add_group').html(response);
+
+                        if(class_id !=old_class_id){
+
+                            $('#subject_id').val('');
+
+                        }
+
+                    }
+
+                    }else{
+
+                    if(edit){
+
+                        $('#display_edit_group_').hide();
+                        $('#edit_group').val(''); 
+
+                    }else{
+
+                        $('#display_add_group_').hide();
+
+                        $('#add_group').val('');
+
+                    }
+                    }
+
+                }
+
+            }
+
+        });  
+===============================================================================
+var old_class_id = '<?php echo $class_id; ?>'??'';
+
+        var group = '<?php echo $group; ?>'??'';
+
+
+        $.ajax({       
+
+            type   : "POST",
+
+            url    : "<?php echo site_url('ajax/get_group_by_class'); ?>",
+
+            data   : { school_id:school_id, class_id : class_id , group : group, old_class_id : old_class_id },               
+
+            async  : false,
+
+            success: function(response){                                                   
+
+            if(response) {
+
+                console.log(response);
+
+                    if(response !='no'){
+
+                        $('#display_add_group_').show();
+                        
+                        $('#add_group').html(response);
+
+                        if(class_id !=old_class_id){
+
+                            $('#subject_id').val('');
+
+                        }
+
+                    
+                    }else{
+                
+                        $('#display_add_group_').hide();
+
+                        $('#add_group').val('');
+                    
+                    }
+
+                }
+
+            }
+
+        });  			
+
+
+
+
+===================================================================
+			<div class="col-md-2 col-sm-2 col-xs-12" id="display_add_group_" style="display: none;">
+
+                                <div class="item form-group">
+
+                                    <div><?php echo $this->lang->line('group'); ?> <span class="required">*</span> </div>
+                                    
+                                    <select  class="form-control col-md-7 col-xs-12" name="group" id="add_group" required="required" onchange="get_subject_by_group(this.value)">
+
+                                        <option value="">--<?php echo $this->lang->line('select'); ?>--</option>
+
+                                        <?php $groups = get_groups(); ?>
+
+                                        <?php foreach($groups as $key=>$value){ ?>
+
+                                            <option value="<?php echo $key; ?>" <?php if(isset($group) && $group == $key){ echo 'selected="selected"';} ?>><?php echo $value; ?></option>
+
+                                        <?php } ?>
+
+                                    </select>
+
+                                    <div class="help-block"><?php echo form_error('group'); ?></div>
+
+                                </div>
+
+                            </div>
+
+------------------------------------
+ $.ajax({       
+
+            type   : "POST",
+
+            url    : "<?php echo site_url('ajax/get_group_by_class'); ?>",
+
+            data   : { school_id:school_id, class_id : class_id ,},               
+
+            async  : false,
+
+            success: function(response){                                                   
+
+            if(response) {
+
+                  
+
+                    if(response =='yes'){
+                       
+                        $('#display_add_group_').show();
+                        $('#add_group').val('');
+ 
+                       
+                    }else{
+                
+                        $('#display_add_group_').hide();
+                        $('#add_group').val('');
+                    
+                    }
+
+                }
+
+            }
+
+        });  
+
+--------------------------------------------------------
+
+
+    function get_subject_by_group(group_name) { 
+
+        var school_id = $('#school_id').val();
+        var curriculum_id = $('#curriculum_id').find(':selected').val();
+        var shift_id = $('#shift_id').find(':selected').val();
+        var class_id = $('#class_id').find(':selected').val();
+
+
+        if (!school_id) {
+
+        toastr.error('<?php echo $this->lang->line('select_school'); ?>');
+
+        return false;
+
+        }
+
+        // console.log(school_id +'--'+ curriculum_id+'--'+shift_id+'--'+class_id+'--'+group_name);
+
+
+        $.ajax({
+
+            type: "POST",
+
+            url: "<?php echo site_url('ajax/get_subject_by_group'); ?>",
+
+            data: {
+
+                school_id: school_id,
+                curriculum_id: curriculum_id,
+                class_id: class_id,
+                group_name: group_name,
+                // subject_id: subject_id
+
+            },
+
+            async: false,
+
+            success: function(response) {
+
+                if (response) {
+
+                    $('#subject_id').html(response);
+
+                }
+
+            }
+
+        });
+
+    }
+
+
+ ========================================================================================================
+					<div class="col-md-3 col-sm-3 col-xs-12" id="display_add_group_" style="display: none;">
+
+                                                <div class="item form-group">
+
+                                                    <label for="group"><?php echo $this->lang->line('group'); ?> <span class="required">*</span></label>
+                                                    
+                                                    <select  class="form-control col-md-7 col-xs-12" name="group" id="add_group" required="required" onchange="get_subject_by_group(this.value)">
+
+                                                        <option value="">--<?php echo $this->lang->line('select'); ?>--</option>
+
+                                                        <?php $groups = get_groups(); ?>
+
+                                                        <?php foreach($groups as $key=>$value){ ?>
+
+                                                            <option value="<?php echo $key; ?>" <?php echo isset($post['group']) && $post['group'] == $key ?  'selected="selected"' : ''; ?>><?php echo $value; ?></option>
+
+                                                        <?php } ?>
+
+                                                    </select>
+
+                                                    <div class="help-block"><?php echo form_error('group'); ?></div>
+
+                                                </div>
+
+                                            </div>
+
+
+EDIT
+
+			 		<div class="col-md-4 col-sm-4 col-xs-12" id="display_edit_group_" style="display: none;">
+
+                                                <div class="item form-group">
+
+                                                    <label for="edit_group"><?php echo $this->lang->line('group'); ?> <span class="required">*</span></label>
+                                                    
+                                                    <select  class="form-control col-md-7 col-xs-12" name="group" id="edit_group" required="required" onchange="get_subject_by_group(this.value)">
+
+                                                        <option value="">--<?php echo $this->lang->line('select'); ?>--</option>
+
+                                                        <?php $groups = get_groups(); ?>
+
+                                                        <?php foreach($groups as $key=>$value){ ?>
+
+                                                            <option value="<?php echo $key; ?>" <?php if($schedule->group == $key){ echo 'selected="selected"';} ?>><?php echo $value; ?></option>
+
+                                                        <?php } ?>
+
+                                                    </select>
+
+                                                    <div class="help-block"><?php echo form_error('group'); ?></div>
+
+                                                </div>
+
+                                            </div>
+
+
+SCRIPT   function get_section_subject_by_class( ------------
+
+ 	<?php if(isset($edit)){ ?>                
+
+            school_id = $('#edit_school_id').val();
+            curriculum_id = $('#edit_curriculum_id').find(':selected').val();
+            $('#edit_group').val('');
+         <?php }else{ ?> 
+            school_id = $('#add_school_id').val();
+            curriculum_id = $('#add_curriculum_id').find(':selected').val();
+            $('#add_group').val('');
+         <?php } ?> 
+
+
+
+
+            $.ajax({       
+
+                type   : "POST",
+
+                url    : "<?php echo site_url('ajax/get_group_by_class'); ?>",
+
+                data   : { school_id:school_id, class_id : class_id ,},               
+
+                async  : false,
+
+                success: function(response){                                                   
+
+                if(response) {
+
+                        // console.log(response);
+
+                        if(response =='yes'){
+                        if(edit){
+
+                            $('#display_edit_group_').show();
+                            
+
+                        }else{
+
+                            $('#display_add_group_').show();
+
+                        }
+                        }else{
+                        if(edit){
+
+                            $('#display_edit_group_').hide();
+                            $('#edit_group').val(''); 
+
+                        }else{
+
+                            $('#display_add_group_').hide();
+                            $('#add_group').val('');
+
+                        }
+                        }
+
+                    }
+
+                }
+
+                });  
+
+               
+
+
+
+
+===================================
+
+ <?php if (isset($edit)) { ?>
+
+            // get_subject_by_group('<?php echo $routine->class_id; ?>', '<?php echo $routine->section_id; ?>', '<?php echo $routine->subject_id; ?>');
+
+        <?php } ?>
+        function get_subject_by_group(group_name) { 
+
+            if (edit) {
+
+                var school_id = $('#edit_school_id').val();
+                var curriculum_id = $('#edit_curriculum_id').find(':selected').val();
+                var shift_id = $('#edit_shift_id').find(':selected').val();
+ 		var class_id = $('#edit_class_id').find(':selected').val();
+                } else {
+
+                var school_id = $('#add_school_id').val();
+                var curriculum_id = $('#add_curriculum_id').find(':selected').val();
+                var shift_id = $('#add_shift_id').find(':selected').val();
+                var class_id = $('#add_class_id').find(':selected').val();
+
+
+                }
+
+                if (!school_id) {
+
+                toastr.error('<?php echo $this->lang->line('select_school'); ?>');
+
+                return false;
+
+            }
+
+            // console.log(school_id +'--'+ curriculum_id+'--'+shift_id+'--'+class_id+'--'+group_name);
+           
+            
+            $.ajax({
+
+                type: "POST",
+
+                url: "<?php echo site_url('ajax/get_subject_by_group'); ?>",
+
+                data: {
+
+                    school_id: school_id,
+                    curriculum_id: curriculum_id,
+                    class_id: class_id,
+                    group_name: group_name,
+                    // subject_id: subject_id
+
+                },
+
+                async: false,
+
+                success: function(response) {
+
+                    if (response) {
+
+                        if (edit) {
+
+                            $('#edit_subject_id').html(response);
+
+                        } else {
+
+                            $('#add_subject_id').html(response);
+
+                        }
+
+                    }
+
+                }
+
+                });
+
+        }
+
+

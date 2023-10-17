@@ -1,0 +1,119 @@
+
+    private function _prepare_section_validation()
+
+    {
+
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_error_delimiters('<div class="error-message" style="color: red;">', '</div>');
+
+        if ($this->input->post('shift_id')) {
+
+            $this->form_validation->set_rules('shift_id', $this->lang->line('shift'), 'trim|required');
+
+        }
+
+        $this->form_validation->set_rules('school_id', $this->lang->line('school_name'), 'trim|required');
+
+         $this->form_validation->set_rules('curriculum_id', $this->lang->line('curriculum'), 'trim|required');
+
+        $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required');
+
+        $this->form_validation->set_rules('name', $this->lang->line('name'), 'required|trim|callback_name');
+
+    }
+
+
+
+======================================================
+
+
+
+    /*****************Function name**********************************
+
+     * @type            : Function
+
+     * @function name   : name
+
+     * @description     : Unique check for "name" data/value                  
+
+     *                       
+
+     * @param           : null
+
+     * @return          : boolean true/false 
+
+     * ********************************************************** */
+
+    public function name()
+
+    {
+
+        if ($this->input->post('id') == '') {
+
+            $section = $this->section->duplicate_check($this->input->post('school_id'), $this->input->post('class_id'), $this->input->post('name'), $this->input->post('curriculum_id'), $this->input->post('shift_id'));
+
+            if ($section) {
+
+                $this->form_validation->set_message('name', $this->lang->line('already_exist'));
+
+                return FALSE;
+
+            } else {
+
+                return TRUE;
+
+            }
+
+        } else if ($this->input->post('id') != '') {
+
+            $section = $this->section->duplicate_check($this->input->post('school_id'), $this->input->post('class_id'), $this->input->post('name'), $this->input->post('curriculum_id'),  $this->input->post('shift_id'), $this->input->post('id'));
+
+            if ($section) {
+
+                $this->form_validation->set_message('name', $this->lang->line('already_exist'));
+
+                return FALSE;
+
+            } else {
+
+                return TRUE;
+
+            }
+
+        } else {
+
+            return TRUE;
+
+        }
+
+    }
+
+==============================================================
+
+ 
+
+    function duplicate_check($school_id, $class_id, $name, $curriculum_id, $shift_id =null, $id = null ){           
+
+           
+
+        if($id){
+
+            $this->db->where_not_in('id', $id);
+
+        }
+
+        $this->db->where('class_id', $class_id);
+
+        $this->db->where('name', $name);
+
+        $this->db->where('school_id', $school_id);
+
+        $this->db->where('curriculum_id', $curriculum_id);
+
+        $this->db->where('shift_id', $shift_id);
+
+        return $this->db->get('sections')->num_rows();           
+
+    }
+================================================================

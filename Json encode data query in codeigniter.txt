@@ -1,0 +1,3 @@
+
+//-------------Json encode data query in codeigniter "like('shift_id', '"' . $shift_id . '"')"---------
+ $classes = $this->db->select('*')->from('classes')->like('shift_id', '"' . $shift_id . '"')->get()->result();

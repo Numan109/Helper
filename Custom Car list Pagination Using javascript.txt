@@ -1,0 +1,175 @@
+
+// ------------------ Custom Car list Pagination Using javascript ---------------
+
+
+<style>
+    
+    section.more-news-and-articles {
+            padding: 150px 0px 50px 0px;
+           
+        }
+        section.more-news-and-articles .listPage {
+            padding: 10px;
+            text-align: center;
+            list-style: none;
+            margin-bottom: 30px;
+            margin-top: auto;
+        }
+        
+        section.more-news-and-articles .listPage li {
+        background-color: #98bbff;
+        padding: 5px 20px;
+        display: inline-block;
+        cursor: pointer;
+        margin: 3px;
+        box-shadow: 0 5px 25px rgb(1 1 1 / 10%);
+        border-radius: 2px;
+        color: #fff;
+        }
+        section.more-news-and-articles .listPage li:hover {
+        background-color: #1A48A1;
+        color: #fff;
+        }
+    
+        section.more-news-and-articles .listPage .active {
+            background-color: #1A48A1;
+            color: #fff;
+        }
+       
+        section.more-news-and-articles .listPage .disabled {
+        pointer-events: none; /* This makes it not clickable */
+        background-color: #b7b7b7;
+        }
+
+</style>
+
+
+
+<section class="news-and-article more-news-and-articles">
+<div class="container">
+    <div class="col-md-12  list">
+        <?php if (isset($news_and_articles) && !empty($news_and_articles)) { ?>
+            <?php foreach ($news_and_articles as $key => $news_and_article) { ?>
+
+                <div class="row pb-5 item " style="display: inline-flex; " >
+                    <?php foreach ($news_and_article as $key => $data) { ?>
+                        <div class="col-md-4 ">
+                            <div class="main-news-card">
+                                <div class="d-lg-flex">
+                                    <div class="news-card border-0 me-lg-4 mb-lg-0 mb-4">
+                                        <div class="backgroundEffect"></div>
+                                        <div class="pic">
+                                            <img class="" src="<?php echo base_url() ?>public/frontend/images/news_and_articles_images/<?php echo $data->news_and_articles_image ?>" alt="" />
+                                            <div class="date">
+                                                <span class="day"><?php echo date("d", strtotime("$data->news_and_articles_date")) ?>
+                                                </span> <span class="month"><?php echo date("M", strtotime("$data->news_and_articles_date")) ?></span>
+                                                <span class="year"><?php echo date("Y", strtotime("$data->news_and_articles_date")) ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <p class="news-card-title h-1 mt-4">
+                                                <?php echo $data->news_and_articles_title ?>
+                                            </p>
+                                            <p class="news-card-description mt-3">
+                                                <?php echo character_limiter($data->news_and_articles_short_description, 150) ?>
+                                            </p>
+                                            <div class="d-flex align-items-center justify-content-between mt-3 pb-3">
+                                                <a href="<?php echo base_url('news-and-articles/') . $data->id ?>" class="btn btn-primary">
+                                                    Read More &nbsp;<span class="fas fa-arrow-right pt-1"></span>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                </div>
+            <?php } ?>
+        <?php } ?>
+
+
+    </div>
+    <ul class="listPage">
+
+    </ul>
+
+</div>
+
+</section>
+
+<script>
+    let thisPage = 1;
+    let limit = 1;
+    let list = document.querySelectorAll('.list .item');
+
+    function loadItem() {
+        let beginGet = limit * (thisPage - 1);
+        let endGet = limit * thisPage - 1;
+        list.forEach((item, key) => {
+            if (key >= beginGet && key <= endGet) {
+                item.style.display = 'block';
+                item.style.display = 'inline-flex';
+            } else {
+                item.style.display = 'none';
+            }
+        })
+        listPage();
+    }
+    loadItem();
+
+    function listPage() {
+        let count = Math.ceil(list.length / limit);
+        document.querySelector('.listPage').innerHTML = '';
+
+        if (thisPage != 1) {
+            let prev = document.createElement('li');
+            prev.innerText = 'PREV';
+            prev.setAttribute('onclick', "changePage(" + (thisPage - 1) + ")");
+            document.querySelector('.listPage').appendChild(prev);
+            prev.style.backgroundColor = '#1A48A1'; 
+            prev.style.borderRadius = '15px 2px 2px 15px'; 
+        }else {
+            let prev = document.createElement('li');
+            prev.innerText = 'PREV';
+            // prev.setAttribute('onclick', "changePage(" + (thisPage - 1) + ")");
+            document.querySelector('.listPage').appendChild(prev);
+            prev.classList.add('disabled');
+            prev.style.borderRadius = '15px 2px 2px 15px';
+        }
+       
+        for (i = 1; i <= count; i++) {
+            let newPage = document.createElement('li');
+            newPage.innerText = i;
+            if (i == thisPage) {
+                newPage.classList.add('active');
+            }
+            newPage.setAttribute('onclick', "changePage(" + i + ")");
+            document.querySelector('.listPage').appendChild(newPage);
+        }
+
+        if (thisPage != count) {
+            let next = document.createElement('li');
+            next.innerText = 'NEXT';
+            next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
+            document.querySelector('.listPage').appendChild(next);
+            next.style.backgroundColor = '#1A48A1'; 
+            next.style.borderRadius = '2px 15px 15px 2px'; 
+        }else {
+            let next = document.createElement('li');
+            next.innerText = 'NEXT';
+            // next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
+            document.querySelector('.listPage').appendChild(next);
+            next.classList.add('disabled');
+            next.style.borderRadius = '2px 15px 15px 2px';
+        }
+    }
+
+    function changePage(i) {
+        thisPage = i;
+        loadItem();
+    }
+</script>

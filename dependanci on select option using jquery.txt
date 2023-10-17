@@ -1,0 +1,39 @@
+ <script>
+    $(document).ready(function(){
+        $('#add_shift_id').on('change', function(){
+            var shift_id = $('#add_shift_id').find(':selected').val();
+            $.ajax({       
+            type   : "POST",
+            url    : "<?php echo site_url('ajax/get_class_by_shift'); ?>",
+            data   : { shift_id : shift_id},               
+            async  : false,
+            success: function(response){                                                   
+               if(response)
+               { 
+                    $('#add_class_id').html(response);                     
+               }
+            }
+        });
+        })
+    })
+ </script>
+
+
+   public function get_class_by_shift() {
+
+        $shift_id = $this->input->post('shift_id');
+
+       $classes = $this->db->select('*')->from('classes')->where_in('shift_id',$shift_id)->get()->result();
+       
+        $str = '<option value="">--' . $this->lang->line('select') . '--</option>';
+       
+        $select = 'selected="selected"';
+        if(!empty($classes)) {
+            foreach ($classes as $obj) {
+                $selected = $shift_id == $obj->id ? $select : '';
+                $str .= '<option value="' . $obj->id . '" ' . $selected . '>' . $obj->name . '</option>';
+            }
+        }
+
+        echo $str;
+    }

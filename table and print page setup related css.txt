@@ -1,0 +1,26 @@
+
+<style>
+ @page {
+
+    size: A4 landscape;
+}
+
+.table > tbody > tr > td {
+    padding: 2px !important;
+}
+
+.table>tbody>tr>th{
+    padding: 2px !important;
+}
+
+     
+.botom_table.table tr:nth-child(1) td{
+border-top:none;
+
+}
+.botom_table.table tr:nth-child(1) th{
+border-top:none;
+
+}
+
+  </style>

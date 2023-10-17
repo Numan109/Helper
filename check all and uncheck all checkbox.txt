@@ -1,0 +1,46 @@
+
+
+<div class="col-md-6 col-sm-6 col-xs-12 " >
+
+    <div class="help-block ">
+
+        <button id="check_all_for_single" type="button" class="btn btn-success btn-xs"><?php echo $this->lang->line('check_all'); ?></button>
+
+        <button id="uncheck_all_for_single" type="button" class="btn btn-success btn-xs"><?php echo $this->lang->line('uncheck_all'); ?></button>
+
+    </div>
+
+                                     
+
+</div>
+
+
+
+
+
+   // single
+
+   $('#check_all_for_single').on('click', function(){
+
+        var gg = $('#all_single_fee_type').children().find('input[type="checkbox"]');
+        var val = [];
+         var total = 0;
+        $(gg).each(function(i){
+          val[i] = $(this).data("item");
+           total+=parseFloat(val[i]);
+        });
+
+
+    $('#amount').val(parseFloat(total));
+
+        $('#all_single_fee_type').children().find('input[type="checkbox"]').prop('checked', true);;
+
+   });
+
+   $('#uncheck_all_for_single').on('click', function(){
+
+        $('#all_single_fee_type').children().find('input[type="checkbox"]').prop('checked', false);;
+        $('#amount').val('0.00');
+   });
+
+</script>

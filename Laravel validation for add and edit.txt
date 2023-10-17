@@ -1,0 +1,47 @@
+
+ <input  type="text" name="name" class="form-control text-default"  required autocomplete="off" id="add_name" placeholder="User Role">
+                   
+         @if($errors->has('name'))
+              <div class="text-danger">{{ $errors->first('name') }}</div>
+         @endif
+
+
+----------------------------------------------------------------------------------------
+       $validate_data = $this->_userRoleValidation($request);
+
+       $validator = Validator::make($request->all(), $validate_data);
+  
+
+       if ($validator->fails()) {
+           return redirect()->back()->withErrors($validator)->withInput();
+       }
+----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+    private function _userRoleValidation($request)
+    {
+
+        $rules = [
+            'name' => $request->has('id') ? 'required|max:255|unique:roles,name,'.$request->id : 'required|unique:roles|max:255',
+        ];
+    
+        return $rules;
+    }
+
+
+//     private function _userRoleValidation($request)
+// {
+//     $rules = [];
+
+//     if ($request->has('id')) {
+//         $rules['name'] = 'required|max:255|unique:roles,name,' . $request->id;
+//     } else {
+//         $rules['name'] = 'required|max:255|unique:roles,name';
+//     }
+
+//     return $rules;
+// }

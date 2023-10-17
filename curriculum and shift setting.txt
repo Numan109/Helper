@@ -1,0 +1,364 @@
+     <-- view -->
+                    <?php $this->load->view('layout/school_list_filter'); ?>
+
+                    <?php $teacher_curriculum_data = get_teacher_access_data('curriculum'); ?>
+
+                    <?php $teacher_shift_data = get_teacher_access_data('shift'); ?>
+
+                    <?php $teacher_student_data_section = get_teacher_access_data('section'); ?>
+
+
+
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+
+                        <div class="item form-group"> 
+
+                            <div><?php echo $this->lang->line('curriculum'); ?> <span class="required">*</span></div>
+
+                            <select  class="form-control col-md-7 col-xs-12 get_curriculum_wish_exam " name="curriculum_id" onchange="change_class(this.value)"  id="curriculum_id" required="required">
+
+                                <option value="">--<?php echo $this->lang->line('select'); ?>--</option>
+
+                                <?php foreach ($curriculum as $obj) { ?>
+
+                                <?php if($this->session->userdata('role_id') == TEACHER && !in_array($obj->id, $teacher_curriculum_data)){ continue;  }?>
+
+                                <option value="<?php echo $obj->id; ?>" <?php if(isset($curriculum_id) && $curriculum_id == $obj->id){ echo 'selected="selected"';} ?>><?php echo $obj->curriculum_name; ?></option>
+
+                                <?php } ?>
+
+                            </select>
+
+                            <div class="help-block"><?php echo form_error('curriculum_id'); ?></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+
+                        <div class="item form-group"> 
+
+                            <div><?php echo $this->lang->line('shift'); ?><span class="required">*</span> </div>
+
+                            <select  class="form-control col-md-7 col-xs-12" name="shift_id" onchange="change_class(this.value)"  id="shift_id" required="required">
+
+                                <option value="">--<?php echo $this->lang->line('select'); ?>--</option>
+
+                                <?php foreach ($shift as $obj) { ?>
+
+                                <?php if($this->session->userdata('role_id') == TEACHER && !in_array($obj->id, $teacher_shift_data)){ continue;  }?>
+
+                                <option value="<?php echo $obj->id; ?>" <?php if(isset($shift_id) && $shift_id == $obj->id){ echo 'selected="selected"';} ?>><?php echo $obj->shift_name; ?></option>
+
+                                <?php } ?>
+
+                            </select>
+
+                            <div class="help-block"><?php echo form_error('shift_id'); ?></div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+
+                        <div class="item form-group"> 
+
+                            <div><?php echo $this->lang->line('class'); ?>  <span class="required">*</span></div>
+
+                            <?php $teacher_student_data = get_teacher_access_data('student'); ?>
+
+                            <select  class="form-control col-md-7 col-xs-12" name="class_id" onmousedown="get_class_by_curriculum_and_shift()" id="class_id"  required="required" onchange="get_section_subject_by_class(this.value,'','');">
+
+                                <option value="">--<?php echo $this->lang->line('select'); ?>--</option>
+
+                                <?php foreach ($classes as $obj) { ?>
+
+                                    <?php if(isset($classes) && !empty($classes)) { ?>
+
+                                    <?php if($this->session->userdata('role_id') == TEACHER && !in_array($obj->id, $teacher_student_data)){ continue; } ?>   
+
+                                    <option value="<?php echo $obj->id; ?>" <?php if(isset($class_id) && $class_id == $obj->id){ echo 'selected="selected"';} ?>><?php echo $obj->name; ?></option>
+
+                                    <?php } ?>
+
+                                <?php } ?>
+
+                            </select>
+
+                            <div class="help-block"><?php echo form_error('class_id'); ?></div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+
+
+
+                        <div class="item form-group"> 
+
+
+
+                            <div><?php echo $this->lang->line('section'); ?></div>
+
+
+
+                            <select  class="form-control col-md-7 col-xs-12" name="section_id" id="section_id">                                
+
+
+
+                                <option value="">--<?php echo $this->lang->line('select'); ?>--</option>
+
+
+
+                            </select>
+
+
+
+                            <div class="help-block"><?php echo form_error('section_id'); ?></div>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+<-- End view -->
+
+<-- Controller-->
+
+ 	$curriculum_id = $this->input->post('curriculum_id');
+
+      	$shift_id = $this->input->post('shift_id'); 
+
+
+ 	$this->data['curriculum_id'] = $curriculum_id;
+
+    	$this->data['shift_id'] = $shift_id;
+
+	
+        $condition = array();
+
+        $condition['status'] = 1;  
+
+
+        $curriculum_condition=[];
+
+        $curriculum_condition = $condition;
+
+        $curriculum_condition['curriculum_status'] = 'Active';
+
+        $shift_condition=[];
+
+        $shift_condition = $condition;
+
+        $shift_condition['shift_status'] = 'Active';  
+
+        if($this->session->userdata('role_id') != SUPER_ADMIN){ 
+
+            
+            $condition['school_id'] = $this->session->userdata('school_id');  
+ 
+            $this->data['curriculum'] = $this->report->get_list('curriculums', $curriculum_condition, '', '', '', 'id', 'ASC');
+    
+            $this->data['shift'] = $this->report->get_list('shifts', $shift_condition, '', '', '', 'id', 'ASC');
+        }
+
+<-- End Controller-->
+
+<-- script-->
+
+
+<script>
+    
+     function get_class_by_curriculum_and_shift(){
+
+        var school_id = '';
+
+        var shift_id ='';
+
+        var curriculum_id = '';
+
+        school_id = $('#school_id').val();
+
+        curriculum_id = $('#curriculum_id').find(':selected').val();
+
+        if($('#shift_id').find(':selected').val()){
+
+            shift_id=$('#shift_id').find(':selected').val();
+        }
+
+    
+
+            
+
+        $.ajax({
+
+            type: "POST",
+
+            url: "<?php echo site_url('ajax/get_class_by_curriculum_and_shift'); ?>",
+
+            data: {
+                school_id: school_id,
+                curriculum_id: curriculum_id,
+                shift_id: shift_id
+            },
+
+            async: false,
+
+            success: function(response) {
+
+                if (response)
+
+                {
+                
+                    $('#class_id').html(response);
+                    
+                }
+
+            }
+
+        });
+
+    }   
+
+
+
+
+    <?php if(isset($class_id) && isset($section_id)){ ?>
+
+
+
+        get_section_subject_by_class('<?php echo $class_id; ?>', '<?php echo $section_id; ?>', '<?php echo $subject_id; ?>');
+
+
+
+    <?php } ?>
+
+
+    function get_section_subject_by_class(class_id, section_id, subject_id){       
+
+        var shift_id = $('#shift_id').find(':selected').val();
+
+        var curriculum_id = $('#curriculum_id').find(':selected').val();
+
+        var school_id = $('#school_id').val();      
+
+
+        if(!school_id){
+
+            toastr.error('<?php echo $this->lang->line('select_school'); ?>');
+
+            return false;
+
+        } 
+
+
+        $.ajax({       
+
+
+
+            type   : "POST",
+
+
+
+            url    : "<?php echo site_url('ajax/get_section_by_class'); ?>",
+
+
+
+            data   : {school_id:school_id, class_id : class_id , section_id: section_id, shift_id:shift_id},               
+
+
+
+            async  : false,
+
+
+
+            success: function(response){                                                   
+
+                if(response){
+
+                    $('#section_id').html(response);
+
+                }
+
+
+
+            }
+
+
+
+        }); 
+
+
+        $.ajax({       
+
+
+
+            type   : "POST",
+
+
+
+            url    : "<?php echo site_url('ajax/get_subject_by_class'); ?>",
+
+
+
+            data   : {school_id:school_id, class_id : class_id , curriculum_id:curriculum_id, subject_id: subject_id},               
+
+
+
+            async  : false,
+
+
+
+            success: function(response){                                                   
+
+
+
+            if(response)
+
+
+
+            {
+
+
+
+                $('#subject_id').html(response);
+
+
+
+            }
+
+
+
+            }
+
+
+
+        });         
+
+
+
+    }
+
+
+
+    function change_class($id){
+
+        $('#class_id').val('') ;  
+        $('#subject_id').val('') ;  
+            
+    };
+
+</script>
+
+
+<-- End Script-->
