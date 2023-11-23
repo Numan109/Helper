@@ -1,0 +1,40 @@
+       Laravel ajax call role
+----------------------------------------------------------------------------------------------------------------
+// Call function
+ <a  onclick="school_status_change({{$value->id}})" class="btn btn-success btn-sm">View</a>
+-----------------------------------------------------------------------------------------------------------------
+//Call ajax method
+ function school_status_change(id){
+         
+        $.ajax({
+            type: "POST",
+            url:"{{route('view_school_status')}}",
+            data:{
+                id:id,
+                _token: '{{ csrf_token() }}',  
+            },
+            async:false,
+            success:function(response){
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        })
+    }
+
+-------------------------------------------------------------------------------------------
+// Route declaration
+Route::post('view-school-status', [SchoolInfoController::class, 'viewSchoolStatus'])->name('view_school_status');
+----------------------------------------------------------------------------------------------
+// Input in controller
+use Illuminate\Http\JsonResponse;
+------------------------------------------------------------------------------------------------
+// Method exicution
+  public function viewSchoolStatus(Request $request){
+        
+        
+        $data = $request->all();
+
+        return response()->json(['data' => $data], JsonResponse::HTTP_OK);
+    }

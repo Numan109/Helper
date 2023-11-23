@@ -1,0 +1,24 @@
+  <script>
+                        function printQR(id) {
+                            // Get the QR code container
+                            var qrCodeDiv = document.getElementById('qr_code_' + id);
+
+                            // Create a new window to print the QR code
+                            var printWindow = window.open("", "myWindow", "width=800px, height=800px");
+                            printWindow.document.write('<html><head><title>Print QR Code</title></head><body style="width:305px; height:305px; margin:auto;">');
+                            printWindow.document.write('<img height="305px" width="305px" src="' + qrCodeDiv.querySelector('img').src + '">');
+                            printWindow.document.write('</body></html>');
+                            printWindow.document.close();
+
+                            // Wait for the QR code to load before printing
+                            printWindow.onload = function () {
+                                // Trigger the print dialog
+                                printWindow.print();
+
+                                // Close the new tab after printing
+                                setTimeout(function () {
+                                    printWindow.close();
+                                }, 0);
+                            };
+                        }
+                    </script>
