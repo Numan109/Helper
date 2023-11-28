@@ -1,0 +1,292 @@
+
+-------------------------------------------------------------------------------------------------------
+// Onclic function =======================
+-------------------------------------------------------------------------------------------------------
+function view_invoice(id) {
+    $.ajax({
+        type: "POST",
+        url: "{{ route('invoice.details') }}",
+        data: {
+            id: id,
+            _token: '{{ csrf_token() }}',
+        },
+        success: function (response) {
+            $('#invoiceViewModal').modal('show');
+            $('#view_invoice_from_ajax').html(response.html); 
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
+}
+
+-----------------------------------------END---------------------------------------------------
+
+
+-------------------------------------------------------------------------------------------------------
+// Route =======================
+-------------------------------------------------------------------------------------------------------
+        Route::post('/view-invoice', 'BidyaanController@view_invoice')->name('invoice.details');
+
+
+------------------------------------END-----------------------------------------------------------
+
+
+
+-------------------------------------------------------------------------------------------------------
+// Method in controller =================================
+   // Use it in controller==============================
+-------------------------------------------------------------------------------------------------------
+	use Illuminate\Support\Facades\View;
+
+     -----------------------------------------------------------------
+    function view_invoice(Request $request)  {
+            $id = $request->input('id');
+            $invoice_data = BidyaanInvoice::where('id', $id)->first();
+    
+            // Render the Blade view and return the HTML
+            $html = View::make('backend.bidyaan.invoice.view_invoice', compact('invoice_data'))->render();
+    
+            return response()->json(['html' => $html]);
+         
+    }
+
+----------------------------------- END -------------------------------------------------------
+
+
+
+-------------------------------------------------------------------------------------------------------
+// Blade file ================================= 
+-------------------------------------------------------------------------------------------------------
+	 
+ <style>
+     .main {
+         height: 1000px;
+         width: 100%;
+         background-color: white;
+         padding: 0px 20px;
+         color: #000;
+     }
+
+     .header {
+         width: 100%;
+
+         height: 120px;
+
+     }
+
+     .left_logo {
+         height: 100%;
+         width: 50%;
+         float: left;
+
+
+         padding: 0px 0px 0px 20px;
+
+     }
+
+     .right_inv_info {
+         width: 50%;
+         padding: 20px;
+         text-align: right;
+         float: left;
+         color: #000;
+     }
+
+     .right_inv_info p,
+     h3,
+     h4 {
+         padding: 0px;
+         margin: 0px;
+     }
+
+     .right_inv_info h3 {
+         font-size: 18px;
+         font-weight: bold;
+     }
+
+     .right_inv_info h4 {
+         font-size: 16px;
+         font-weight: bold;
+     }
+
+     .right_inv_info p {
+         font-size: 13px;
+         line-height: normal;
+     }
+
+     .address {
+         height: 200px;
+         width: 100%;
+     }
+
+     .left_address {
+         width: 50%;
+         float: left;
+     }
+
+     .right_address {
+         width: 50%;
+         float: left;
+     }
+
+     table {
+         border-collapse: collapse;
+
+
+     }
+
+
+     th,
+     td {
+         padding: 2px 8px;
+         text-align: left;
+
+     }
+
+     td {
+         font-size: 14px;
+         line-height: normal;
+         border: 1px solid #000;
+     }
+
+
+     th {
+         background-color: #727272;
+         color: white;
+     }
+ </style>
+ <div class="main">
+     <div class="header">
+         <div class="left_logo">
+             <img style="width: 150px; height: 150px;" src="{{ asset('public/upload/logo.png') }}" alt="">
+
+         </div>
+         <div class="right_inv_info">
+             <h3>Invoice</h3>
+             <h4>Inv. : {{$invoice_data->invoice_id}}</h4>
+             <p> Invoice date : {{date('d-m-Y', strtotime($invoice_data->invoice_date))}} </p>
+             <!-- <p> Date : 01-02-2023 </p>
+                        <p> Customer Code: CU2002-00023 </p> -->
+         </div>
+
+
+     </div>
+
+
+     <div class="address">
+         <div class="left_address">
+             <p style="padding: 0px 15px; margin:0px;">From:</p>
+             <div class="box" style=" width: 98%; height:150px; padding:5px; background-color:#dbdbdb">
+                 <h4 style="padding-left: 10px; font-weight:bold;">DevsZone</h4>
+                 <address style="padding:0px 10px 0px 10px; line-height:normal; font-size:13px;">
+
+                     House-717, Road-10, Avenue-03, Mirpur DOHS,
+                     Dhaka
+                     1216 Dhaka <br><br>
+                     Phone: 8801874041871-6 <br>
+                     Email: info@devszone.com <br>
+                     Web: www.devszone.com <br>
+                 </address>
+             </div>
+
+         </div>
+         <div class="right_address">
+             <p style="padding: 0px 15px; margin:0px;"> To: </p>
+             <div class="box" style="float:right; width: 98%; height:150px; border:1px solid;padding:5px; ">
+                 <h4 style="padding-left: 10px; font-weight:bold;"> {{$invoice_data->school_name}}</h4>
+                 <address style="padding:0px 10px 0px 10px; line-height:normal; font-size:13px">
+
+                     <!-- {{$invoice_data->address}} <br><br>
+                                Phone:{{$invoice_data->phone}} <br>
+                                Email: {{$invoice_data->email}} <br> -->
+
+                 </address>
+             </div>
+
+
+         </div>
+     </div>
+
+     <div class="main_table" style="width: 100%;">
+
+         <table style="width: 100%;">
+             <thead>
+                 <tr>
+                     <th>Sl No</th>
+                     <th style="width:40%">Bill Month</th>
+                     <th>Gross Amount</th>
+                     <th>Discount
+                     <th>Net Amount </th>
+
+                 </tr>
+             </thead>
+
+             <tbody>
+
+                 <tr style="padding-bottom: 50px;">
+                     <td style="padding-bottom: 30px;">1</td>
+                     <td style="padding-bottom: 30px;">
+                         @php $bill_month = date('M, Y', strtotime($invoice_data->month_year)) @endphp
+                         {{$bill_month}}
+                     </td>
+                     <td style="padding-bottom: 30px;">{{$invoice_data->gross_amount}}</td>
+                     <td style="padding-bottom: 30px;">{{$invoice_data->discount}}</td>
+                     <td style="padding-bottom: 30px;">{{$invoice_data->net_amount}}</td>
+                 </tr>
+
+             </tbody>
+             <tfoot>
+                 <tr>
+
+                     <td colspan="3" style="border: none;"> </td>
+                     <td>Total :</td>
+
+                     <td style="text-align: left;"> {{$invoice_data->net_amount}}</td>
+
+                 </tr>
+
+                 <tr>
+
+                     <td colspan="3" style="border: none;"> </td>
+                     <td>Paid Aamount :</td>
+
+                     <td style="text-align: left;"><?php if ($invoice_data->status == 'paid') {
+                                                        echo $paid_amount =  $invoice_data->net_amount;
+                                                    } else {
+                                                        $paid_amount = 0.00;
+                                                        echo "0.00";
+                                                    } ?> </td>
+
+                 </tr>
+
+                 <tr>
+
+                     <td colspan="3" style="border: none;"> </td>
+                     <td>Due Amount :</td>
+
+                     <td style="text-align: left;"><span class="btn-danger"> <?php echo $invoice_data->net_amount - $paid_amount; ?></span></td>
+
+                 </tr>
+
+             </tfoot>
+
+         </table>
+
+     </div>
+
+     <div class="bank_info" style="width: 100%; margin-top:20px;">
+         <!-- <address style="padding:0px 10px 0px 10px; line-height:normal; font-size:13px;">
+                        <b>Payment by transfer to the following bank account:</b> <br>
+                        <b>Bank: The City Bank </b><br>
+                        <b> Account number: 1421643361001</b> <br>
+                        Address: PALLABI <br>
+                        Account owner name: DEVSZON
+                    </address> -->
+     </div>
+     <div class="buttons text-right" style="margin-top: 20px;">
+         <!-- <a href="javascript:void(0);" class="btn btn-primary">Print</a> -->
+         {{-- <a href="{{route('invoicePdf',$id)}}" target="_blank" class="btn btn-success">PDF</a> --}}
+     </div>
+ </div>
+----------------------------------- END -------------------------------------------------------
