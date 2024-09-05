@@ -1,0 +1,20 @@
+    
+<img id="loader_image" style="margin-right: 5px; display:none" src="{{asset('templete_1/img/loading_5.gif')}}" height="22px" alt="">
+
+
+
+
+
+$('#load-more-btn').css({
+                        'cursor': 'wait',
+                    }).prop('disabled', true);
+                    $('#loader_image').show();
+
+
+ 
+
+   $('#loader_image').hide();
+                            $('#load-more-btn').css({
+                        'cursor': 'auto',
+                        
+                    }).prop('disabled', false);

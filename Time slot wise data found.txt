@@ -1,0 +1,41 @@
+
+// Given array of times
+$times = array(
+    array("id" => 1, "time" => "00:01:53.000000"),
+    array("id" => 2, "time" => "00:20:01.000000"),
+    array("id" => 3, "time" => "00:35:01.000000"),
+    array("id" => 4, "time" => "00:15:01.000000"),
+    array("id" => 5, "time" => "01:18:41.000000")
+);
+
+        // Given range array
+        $range = array(0, 10, 20, 30, 40, 50, 60);
+       
+
+        // Initialize an array to hold counts
+        $count_array = array_fill(0, count($range), 0);
+
+        // Iterate through each time
+        foreach ($times as $time) {
+            // Extract minutes from the time
+            list($hours, $minutes, $seconds) = explode(":", $time['time']);
+            $total_minutes = $hours * 60 + $minutes + $seconds / 60;
+
+            echo $total_minutes;
+            echo "<pre>";
+            // Find which range the time falls into
+          
+
+            foreach($range as $key=>$val){
+                if ($total_minutes <= $range[$key] && $total_minutes < $range[$key + 1]) {
+                    // Increment the count for the corresponding range
+                    $count_array[$key]++;
+                    break;
+                }
+            }
+        }
+
+         echo "<pre>";
+        print_r($count_array);
+        exit();
+

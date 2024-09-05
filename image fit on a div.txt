@@ -1,0 +1,11 @@
+.img-container {
+    width: 400px; /* Example width or width:100% */ 
+    height: 300px; /* Example height */
+    overflow: hidden; /* Hide overflow if image is larger */
+}
+
+.img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Maintain aspect ratio and crop as needed */
+}

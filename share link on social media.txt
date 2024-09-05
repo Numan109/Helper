@@ -1,0 +1,79 @@
+  <meta property="og:type" content="website">
+        <meta property="og:title" content="{{ $product->name }}">
+        <meta property="og:description" content="{{ $product->details }}">
+        <meta property="og:image" content="{{ image_url($product->image) }}">
+        <meta property="og:url" content="{{ route('product-details', ['id' => $product->id]) }}">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $product->name }}">
+        <meta name="twitter:description" content="{{ $product->details }}">
+        <meta name="twitter:image" content="{{ image_url($product->image) }}">
+        <meta name="twitter:url" content="{{ route('product-details', ['id' => $product->id]) }}">
+
+
+
+
+<style>
+    div#social-links {
+        margin: 0 auto;
+        max-width: 500px;
+    }
+    div#social-links ul li {
+        display: inline-block;
+    }
+    div#social-links ul li a {
+        padding: 20px;
+        border: 1px solid #ccc;
+        margin: 1px;
+        font-size: 30px;
+        color: #222;
+        background-color: #ccc;
+    }
+</style>
+
+<!-- Share Buttons -->
+<div id="social-links">
+    <ul>
+        <li>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('product-details', ['id' => $product->id])) }}"
+               target="_blank" class="social-button">
+                <i class="fa fa-facebook"></i>
+            </a>
+        </li>
+        <li>
+            <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('product-details', ['id' => $product->id])) }}&text={{ urlencode($product->name) }}"
+               target="_blank" class="social-button">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('product-details', ['id' => $product->id])) }}&title={{ urlencode($product->name) }}"
+               target="_blank" class="social-button">
+                <i class="fa fa-linkedin"></i>
+            </a>
+        </li>
+        <li>
+            <a href="https://t.me/share/url?url={{ urlencode(route('product-details', ['id' => $product->id])) }}&text={{ urlencode($product->name) }}"
+               target="_blank" class="social-button">
+                <i class="fa fa-telegram"></i>
+            </a>
+        </li>
+        <li>
+            <a href="https://api.whatsapp.com/send?text={{ urlencode(route('product-details', ['id' => $product->id]) . ' ' . $product->name) }}"
+               target="_blank" class="social-button">
+                <i class="fa fa-whatsapp"></i>
+            </a>
+             <a href="https://api.whatsapp.com/send?text={{ urlencode("Check out this product:\n\n " . route('product-details', ['id' => $product->id]) . "\n" . $product->name . "\n" . $product->details) }}"
+                 target="_blank" class="social-button">
+                  <i class="fa fa-whatsapp"></i>
+             </a>
+        </li>
+        <li>
+            <a href="https://www.reddit.com/submit?url={{ urlencode(route('product-details', ['id' => $product->id])) }}&title={{ urlencode($product->name) }}"
+               target="_blank" class="social-button">
+                <i class="fa fa-reddit"></i>
+            </a>
+        </li>
+    </ul>
+</div>

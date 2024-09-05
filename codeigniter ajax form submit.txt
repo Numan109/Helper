@@ -1,0 +1,94 @@
+   <?php echo form_open(site_url('exam/mark/add'), array('name' => 'addmark', 'id' => 'addmark', 'class'=>'form-horizontal form-label-left'), ''); ?>
+
+     <button id="send" type="submit" class="btn btn-success"><?php echo $this->lang->line('submit'); ?></button>
+
+   <?php echo form_close(); ?>
+
+==================================================================================
+<script>
+   
+$(document).ready(function() {
+    $('#addmark').submit(function(e) {
+        e.preventDefault(); // Prevent the form from submitting the traditional way
+
+        $.ajax({
+            url: $(this).attr('action'), // The URL is taken from the form's action attribute
+            type: 'POST',
+            data: $(this).serialize(), // Serialize the form data
+            dataType: 'json', // Expect JSON response from the server
+            success: function(response) {
+                if (response.success) {
+                    // Handle success, such as showing a message or redirecting
+                    
+                    toastr.success(response.message);
+
+                        location.reload();
+                } else {
+                    // Handle the error, e.g., show an error message
+                     
+                    toastr.success(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle AJAX errors
+                // alert('AJAX error: ' + error);
+                toastr.success(error);
+            }
+        });
+    });
+});
+ 
+</script>
+========================================================================================================
+
+ public function add() {
+
+        check_permission(ADD);
+    
+        if ($_POST) {
+  if (!empty($_POST['students'])) {
+    
+                foreach ($_POST['students'] as $key => $value) {
+    
+                    $condition['student_id'] = $value;
+    
+                    $data['daily_exam_mark'] = $_POST['daily_exam_total_mark'][$value];
+                    $data['daily_exam_obtain'] = $_POST['obtain_total_daily_mark'][$value];
+    
+                    $data['term_exam_mark'] = $_POST['exam_total_mark'][$value];
+                    $data['term_exam_obtain'] = $_POST['obtain_total_mark'][$value];
+    
+                    $data['converted_term_exam_mark'] = $_POST['converted_exam_total_mark'][$value];
+                    $data['converted_term_exam_obtain'] = $_POST['converted_obtain_total_mark'][$value];
+    
+                    if ($this->data['single_curriculum']->enable_daily_exam == 'yes' && $this->data['exam_name']->status == 1) {
+                        $data['total_mark'] = $_POST['daily_and_term_total'][$value];
+                    } else {
+                        $data['total_mark'] = $_POST['obtain_total_mark'][$value];
+                    }
+    
+                    if ($this->data['single_curriculum']->enable_daily_exam == 'yes' && $this->data['exam_name']->status == 1) {
+                        $data['heighest_mark'] = $heighest_mark_with_daily;
+                    } else {
+                        $data['heighest_mark'] = $heighest_mark_without_daily;
+                    }
+    
+                    $data['grade_id'] = $_POST['grade_id'][$value];
+                    $data['remark'] = $_POST['remark'][$value];
+                    $data['status'] = 1;
+                    $data['modified_at'] = date('Y-m-d H:i:s');
+                    $data['modified_by'] = logged_in_user_id();
+    
+                    $this->mark->update('marks', $data, $condition);
+                }
+            }
+    
+            create_log('Has been process exam mark and save for class: ' . $class->name);
+    
+            echo json_encode(['success' => true, 'message' => $this->lang->line('insert_success')]);
+    
+        } else {
+            echo json_encode(['success' => false, 'message' => 'No POST data received.']);
+        }
+    }
+    

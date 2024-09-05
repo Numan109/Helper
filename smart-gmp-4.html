@@ -1,0 +1,195 @@
+<html>
+  <head>
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: "#da373d",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      #my-video_html5_api {
+        border: 2px solid white;
+      }
+      h4 {
+        background-color: #b4cddb;
+        position: relative;
+        left: 15px;
+        width: 94%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      class="grid grid-cols-4 text-center font-bold text-blue-900 my-24 gap-5"
+    >
+      <div>
+        <h4>Gazipura IN</h4>
+        <video
+          id="my-video"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          buffered="[0.00, 12.55]"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp118.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+      <div>
+        <h4>Gazipura OUT</h4>
+        <video
+          id="my-video"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="540"
+          height="264"
+          data-setup="{}"
+          buffered="[0.00, 12.55]"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp116.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>College Gate IN</h4>
+        <video
+          id="my-video"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="540"
+          height="264"
+          data-setup="{}"
+          buffered="[0.00, 12.55]"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp120.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>College Gate OUT</h4>
+        <video
+          id="my-video"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="540"
+          height="264"
+          data-setup="{}"
+          buffered="[0.00, 12.55]"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp122.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Tongi IN</h4>
+        <video
+          id="my-video"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="540"
+          height="264"
+          data-setup="{}"
+          buffered="[0.00, 12.55]"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp124.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Tongi OUT</h4>
+        <video
+          id="my-video"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="540"
+          height="264"
+          data-setup="{}"
+          buffered="[0.00, 12.55]"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp123.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Kamarpara IN</h4>
+        <video
+          id="my-video"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="540"
+          height="264"
+          data-setup="{}"
+          buffered="[0.00, 12.55]"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp125.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Kamarpara EXIT</h4>
+        <video
+          id="my-video"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="640"
+          height="264"
+          data-setup="{}"
+          buffered="[0.00, 12.55]"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp126.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+    </div>
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+  </body>
+</html>

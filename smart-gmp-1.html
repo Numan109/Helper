@@ -1,0 +1,280 @@
+<html>
+  <head>
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: "#da373d",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      #my-video_html5_api {
+        border: 2px solid white;
+      }
+      h4 {
+        background-color: #b4cddb;
+        position: relative;
+        left: 15px;
+        width: 94%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      class="grid grid-cols-4 text-center font-bold text-blue-900 my-24 gap-5"
+    >
+      <div>
+        <h4>Salna In</h4>
+        <video
+          id="my-video-1"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          poster="https://www.windowsphoneinfo.com/attachments/c293a0e9-f697-4b03-a116-dc0090cad196-upload-true-jpg.71855/"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp101.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Salna Out</h4>
+        <video
+          id="my-video-2"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          poster="https://www.windowsphoneinfo.com/attachments/c293a0e9-f697-4b03-a116-dc0090cad196-upload-true-jpg.71855/"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp102.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Porabari In</h4>
+        <video
+          id="my-video-3"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          poster="https://www.windowsphoneinfo.com/attachments/c293a0e9-f697-4b03-a116-dc0090cad196-upload-true-jpg.71855/"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp104.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Porabari Out</h4>
+        <video
+          id="my-video-4"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          poster="https://www.windowsphoneinfo.com/attachments/c293a0e9-f697-4b03-a116-dc0090cad196-upload-true-jpg.71855/"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp103.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Rajendrapur In</h4>
+        <video
+          id="my-video-5"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          poster="https://www.windowsphoneinfo.com/attachments/c293a0e9-f697-4b03-a116-dc0090cad196-upload-true-jpg.71855/"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp106.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Rarajendrapur Out</h4>
+        <video
+          id="my-video-6"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          poster="https://www.windowsphoneinfo.com/attachments/c293a0e9-f697-4b03-a116-dc0090cad196-upload-true-jpg.71855/"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp105.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Nowjor IN</h4>
+        <video
+          id="my-video-7"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          poster="https://www.windowsphoneinfo.com/attachments/c293a0e9-f697-4b03-a116-dc0090cad196-upload-true-jpg.71855/"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp108.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+
+      <div>
+        <h4>Nowjor Exit</h4>
+        <video
+          id="my-video-8"
+          class="video-js"
+          controls
+          autoplay
+          preload="auto"
+          width="440"
+          height="264"
+          data-setup="{}"
+          poster="https://www.windowsphoneinfo.com/attachments/c293a0e9-f697-4b03-a116-dc0090cad196-upload-true-jpg.71855/"
+        >
+          <source
+            src="http://103.113.152.106:8080/hls/gmp107.m3u8"
+            type="application/x-mpegURL"
+          />
+        </video>
+      </div>
+    </div>
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var player1 = videojs("my-video-1");
+
+        // Set the GOAL_BUFFER_LENGTH and MAX_GOAL_BUFFER_LENGTH for buffering
+        player1.tech_.hls.xhr.beforeRequest = function (options) {
+          options.headers = options.headers || {};
+          options.headers.GOAL_BUFFER_LENGTH = 15;
+          options.headers.MAX_GOAL_BUFFER_LENGTH = 30;
+          return options;
+        };
+
+        var player2 = videojs("my-video-2");
+
+        // Set the GOAL_BUFFER_LENGTH and MAX_GOAL_BUFFER_LENGTH for buffering
+        player2.tech_.hls.xhr.beforeRequest = function (options) {
+          options.headers = options.headers || {};
+          options.headers.GOAL_BUFFER_LENGTH = 15;
+          options.headers.MAX_GOAL_BUFFER_LENGTH = 30;
+          return options;
+        };
+
+        var player3 = videojs("my-video-3");
+
+        // Set the GOAL_BUFFER_LENGTH and MAX_GOAL_BUFFER_LENGTH for buffering
+        player3.tech_.hls.xhr.beforeRequest = function (options) {
+          options.headers = options.headers || {};
+          options.headers.GOAL_BUFFER_LENGTH = 15;
+          options.headers.MAX_GOAL_BUFFER_LENGTH = 30;
+          return options;
+        };
+
+        var player4 = videojs("my-video-4");
+
+        // Set the GOAL_BUFFER_LENGTH and MAX_GOAL_BUFFER_LENGTH for buffering
+        player4.tech_.hls.xhr.beforeRequest = function (options) {
+          options.headers = options.headers || {};
+          options.headers.GOAL_BUFFER_LENGTH = 15;
+          options.headers.MAX_GOAL_BUFFER_LENGTH = 30;
+          return options;
+        };
+
+        var player5 = videojs("my-video-5");
+
+        // Set the GOAL_BUFFER_LENGTH and MAX_GOAL_BUFFER_LENGTH for buffering
+        player5.tech_.hls.xhr.beforeRequest = function (options) {
+          options.headers = options.headers || {};
+          options.headers.GOAL_BUFFER_LENGTH = 15;
+          options.headers.MAX_GOAL_BUFFER_LENGTH = 30;
+          return options;
+        };
+
+        var player6 = videojs("my-video-6");
+
+        // Set the GOAL_BUFFER_LENGTH and MAX_GOAL_BUFFER_LENGTH for buffering
+        player6.tech_.hls.xhr.beforeRequest = function (options) {
+          options.headers = options.headers || {};
+          options.headers.GOAL_BUFFER_LENGTH = 15;
+          options.headers.MAX_GOAL_BUFFER_LENGTH = 30;
+          return options;
+        };
+
+        var player7 = videojs("my-video-7");
+
+        // Set the GOAL_BUFFER_LENGTH and MAX_GOAL_BUFFER_LENGTH for buffering
+        player7.tech_.hls.xhr.beforeRequest = function (options) {
+          options.headers = options.headers || {};
+          options.headers.GOAL_BUFFER_LENGTH = 15;
+          options.headers.MAX_GOAL_BUFFER_LENGTH = 30;
+          return options;
+        };
+
+        var player8 = videojs("my-video-8");
+
+        // Set the GOAL_BUFFER_LENGTH and MAX_GOAL_BUFFER_LENGTH for buffering
+        player8.tech_.hls.xhr.beforeRequest = function (options) {
+          options.headers = options.headers || {};
+          options.headers.GOAL_BUFFER_LENGTH = 15;
+          options.headers.MAX_GOAL_BUFFER_LENGTH = 30;
+          return options;
+        };
+      });
+    </script>
+  </body>
+</html>

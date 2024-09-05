@@ -1,0 +1,4 @@
+SELECT * FROM student_attendance_wise_subsidy WHERE school_register_id = 2 AND month_year = '2024-08' GROUP BY student_attendence_id HAVING COUNT(student_attendence_id) >1 ORDER BY student_attendance_wise_subsidy.student_attendence_id ASC;
+
+
+DELETE FROM student_attendance_wise_subsidy WHERE student_attendance_wise_subsidy_id NOT IN ( SELECT id FROM ( SELECT MIN(student_attendance_wise_subsidy_id) AS id FROM student_attendance_wise_subsidy WHERE school_register_id = 2 AND month_year = '2024-08' GROUP BY student_attendence_id ) AS keep_ids ) AND school_register_id = 2 AND month_year = '2024-08';

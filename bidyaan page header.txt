@@ -1,0 +1,61 @@
+       <div class="layout-box" style="width:100%; padding:0px; margin:0px;">
+
+                                <table style=" width:100%;  border-radius: 0px 0px 10px 10px; margin-bottom: 20px; ">
+
+                                    <tr>
+
+                                        <td style="width:5%; padding:10px 0px 0px 10px;">
+
+                                        </td>
+
+                                        <td style="width:90%; padding:10px 0px 0px 10px;">
+
+                                            <div class="header_main" style="width:100%; display:grid; place-items:center;">
+
+                                                <div class="mm">
+                                                    <div class="im" style="float:left; ">
+                                                        <span class="sub-title-img">
+
+                                                            <?php if ($school->logo) { ?>
+
+                                                                <img style="width:100px; margin-right:15px; padding: 0px;" src="<?php echo UPLOAD_PATH; ?>/logo/<?php echo $school->logo; ?>" alt="" width="100px" />
+
+                                                            <?php } else if ($school->frontend_logo) { ?>
+
+                                                                <img style="width:100px;margin-right:15px; padding: 0px;" src="<?php echo UPLOAD_PATH; ?>/logo/<?php echo $school->frontend_logo; ?>" alt="" width="100px" />
+
+                                                            <?php } else { ?>
+
+                                                                <img style="width:100px; margin-right:15px; padding: 0px;" src="<?php echo UPLOAD_PATH; ?>/logo/<?php echo $this->global_setting->brand_logo; ?>" alt="" width="100px" />
+
+                                                            <?php } ?>
+
+                                                        </span>
+                                                    </div>
+                                                    <div class="nam" style="float:left;text-align: center ; ">
+                                                        <span style="text-align: center ;">
+
+                                                            <?php if (isset($school)) { ?>
+
+                                                                <h2><strong><?php echo $school->school_name; ?></strong></h2>
+
+                                                                <h5> <?php echo $school->address; ?></h5>
+
+                                                            <?php } ?>
+
+                                                            <h2 style="display:inline-block; margin:0px; padding:0px 0px 15px; border-radius:10px;font-size:20px;"><strong><?php echo $exam_name ?> </strong></h2>
+
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+
+                                        <td style="width:5%; padding:10px 0px 0px 10px;"></td>
+
+                                    </tr>
+
+                                </table>
+
+                            </div>

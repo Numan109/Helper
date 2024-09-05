@@ -1,0 +1,198 @@
+ 
+ <x-form.form id="record_search" method="GET" action="{{ route('record.search') }}">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <x-form.select-box
+                                        label="Select Camera"
+                                        name="camera_id"
+                                        id="camera_id"
+                                        :options="$cameraOptions"
+                                        :selected="old('camera_id',$searchParameters['camera_id'])"
+                                        error="{{ $errors->first('camera_id') }}" />
+                                </div>
+                                <div>
+
+                                    <x-form.formInput
+                                        label="From Date"
+                                        name="start_date"
+                                        type="date"
+                                        value="{{ old('start_date',$searchParameters['start_date']) }}"
+                                        placeholder="Camera start_date"
+                                        error="{{ $errors->first('start_date') }}" />
+                                </div>
+                                <div>
+                                    <x-form.formInput
+                                        label="To Date"
+                                        name="end_date"
+                                        type="date"
+                                        value="{{ old('end_date',$searchParameters['end_date']) }}"
+                                        placeholder="Camera end_date"
+                                        error="{{ $errors->first('end_date') }}" />
+                                </div>
+                            </div>
+                            <div class="mt-4 text-right">
+                                <a href="{{ route('record.search.clear') }}" class="btn btn-bw btn-sm bg-[#f5f5f5]">Clear</a>
+                                <button type="submit" class="btn btn-bw btn-sm bg-[#f5f5f5] ">Search</button>
+                            </div>
+                        </x-form.form>
+======================================================================================
+
+
+
+<script>
+                    $(document).ready(function() {
+                        $('#record_search').on('submit', function(e) {
+                            e.preventDefault();
+                            $('.loader').show();
+                            var formData = $(this).serialize();
+                            var queryString = $(this).serialize();
+                            var baseUrl = window.location.origin + window.location.pathname;
+                            var newUrl = baseUrl + '?' + queryString;
+                            window.history.pushState(null, null, newUrl);
+
+                            $.ajax({
+                                url: $(this).attr('action'),
+                                method: 'GET',
+                                data: formData,
+                                success: function(response) {
+                                    $('.loader').hide();
+
+                                    if (response.success) {
+                                        $('#search_records').html(response.data);
+                                        $('#search_records').addClass('md:grid-cols-2 lg:grid-cols-3');
+
+                                    } else {
+                                        $('#search_records').removeClass('md:grid-cols-2 lg:grid-cols-3');
+                                        $('#search_records').html('<h2 class="text-center">Ops! No data found.</h2>');
+
+                                    }
+                                },
+                                error: function(xhr) {
+                                    $('.loader').hide();
+                                    console.log(xhr.responseText);
+                                }
+                            });
+                        });
+
+                        // $(window).on('popstate', function() {
+                        //     var queryString = window.location.search.substring(1);
+                        //     var params = new URLSearchParams(queryString);
+
+                        //     $('#camera_id').val(params.get('camera_id') || '');
+                        //     $('#start_date').val(params.get('start_date') || '');
+                        //     $('#end_date').val(params.get('end_date') || '');
+
+                        //     $('#record_search').submit();
+                        // });
+                    });
+
+
+                    $(document).ready(function() {
+                        // Convert PHP array to JSON and assign to a JavaScript variable
+                        var records = @json($records);
+
+                        // Check the length of the records array
+                        if (records.length > 0) {
+                            console.log('have');
+                            $('#search_records').addClass('md:grid-cols-2 lg:grid-cols-3');
+                        } else {
+                            console.log('no');
+
+                            $('#search_records').removeClass('md:grid-cols-2 lg:grid-cols-3');
+                        }
+                    });
+                </script>
+
+=============================================================================================================
+
+
+    Route::get('recording', [RecordController::class, 'index'])->name('recording');
+    Route::get('search-record', [RecordController::class, 'searchRecord'])->name('record.search');
+    Route::get('search-record-clear', [RecordController::class, 'searchRecordClear'])->name('record.search.clear');
+
+=======================================================================================================================
+ public function index(Request $request)
+    {
+
+        $searchParameters = $request->only(['camera_id', 'start_date', 'end_date']); 
+
+        if (!empty($searchParameters)) { 
+            $query = Record::query();
+            if (!empty($searchParameters['camera_id'])) {
+                $query->where('camera_id', $searchParameters['camera_id']);
+            }
+            if (!empty($searchParameters['start_date'])) {
+                $query->whereDate('created_at', '>=', $searchParameters['start_date']);
+            } else {
+                $query->whereDate('created_at', '>=', '1900-01-01');
+            }
+
+            if (!empty($searchParameters['end_date'])) {
+                $query->whereDate('created_at', '<=', $searchParameters['end_date']);
+            } else {
+                $query->whereDate('created_at', '<=', date('Y-m-d'));
+            }
+
+            $records = $query->get();
+        } else {
+            $records = Record::latest('id')->get();
+            $searchParameters = [
+                'camera_id' => '',
+                'start_date' => '',
+                'end_date' => '',
+            ];
+        }
+
+        $cameras = Camera::where('status', 'active')->get();
+        $cameraOptions = $cameras->pluck('name', 'id')->toArray();
+        $cameraOptions = ['' => '--Select--'] + $cameraOptions;
+
+        return view('record.index', compact('records', 'cameraOptions', 'searchParameters'));
+    }
+
+
+  public function searchRecord(Request $request)
+    {
+
+        $query = Record::query();
+        if (!empty($request->camera_id)) {
+            $query->where('camera_id', $request->camera_id);
+        }
+        if (!empty($request->start_date)) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        } else {
+            $query->whereDate('created_at', '>=', '1900-01-01');
+        }
+
+        if (!empty($request->end_date)) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        } else {
+            $query->whereDate('created_at', '<=', date('Y-m-d'));
+        }
+
+
+        $records = $query->get();
+
+        if(count($records) > 0){
+            $view = view('record.search', compact('records'))->render();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data found',
+                'data' => $view,
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found',
+                'data' => [],
+            ]);
+        }
+       
+    }
+
+
+    public function searchRecordClear()
+    {
+        return redirect()->route('recording');
+    }

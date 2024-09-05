@@ -1,0 +1,193 @@
+
+        
+.checkboxes {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.checkboxes__item {
+  padding: 1px 5px 8px 9px;
+  width: 50%;
+}
+
+
+/* STYLE E */
+
+.checkbox.style-e {
+  display: inline-block;
+  position: relative;
+  padding-left: 50px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.checkbox.style-e input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.checkbox.style-e input:checked ~ .checkbox__checkmark {
+  background-color: #1e90ff;
+}
+.checkbox.style-e input:checked ~ .checkbox__checkmark:after {
+  left: 21px;
+}
+.checkbox.style-e:hover input ~ .checkbox__checkmark {
+  background-color: #eee;
+}
+.checkbox.style-e:hover input:checked ~ .checkbox__checkmark {
+  background-color: #1e90ff;
+}
+.checkbox.style-e .checkbox__checkmark {
+  position: absolute;
+  top: 1px;
+  left: 0;
+  height: 30px;
+  width: 50px;
+  background-color: #eee;
+  transition: background-color 0.25s ease;
+  border-radius: 15px;
+}
+.checkbox.style-e .checkbox__checkmark:after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 5px;
+  width: 20px;
+  height: 20px;
+  display: block;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: left 0.25s ease;
+}
+.checkbox.style-e .checkbox__body {
+  color: #333;
+  line-height: 1.4;
+  font-size: 16px;
+  transition: color 0.25s ease;
+}
+
+<?php $teacher_subject_data = get_teacher_access_data('subject'); ?>
+<hr>
+<div class="row" style="    margin-bottom: 20px; font-weight: bold;">
+        <div class="col-md-1 col-xs-12"></div>
+
+        <div class="col-md-2 col-xs-6">  
+            Subject
+        </div>
+
+        <div class="col-md-2 col-xs-6">
+            Exam Mark
+        </div>
+
+        <div class="col-md-2 col-xs-6"> 
+           Exam Date
+        </div>
+
+        <div class="col-md-2 col-xs-6"> 
+            Start Time
+        
+        </div>
+
+        <div class="col-md-2 col-xs-6">  
+            End Time 
+        </div>
+
+        <div class="col-md-1 col-xs-6">  
+            Room No
+        </div>
+        
+    </div>
+   
+    <?php foreach($subjects as $key => $subject): ?>
+    <?php if ($this->session->userdata('role_id') == TEACHER && !in_array($subject->id, $teacher_subject_data)) { continue; } ?>
+    <div class="row">
+        <div class="col-md-1 col-xs-12">
+        
+          
+            <div class="checkboxes__item">
+      <label class="checkbox style-e">
+      <input name="exam_enable[<?php echo $subject->id; ?>]" id="exam_enable_<?php echo $subject->id; ?>" type="checkbox" value="on">
+        <div class="checkbox__checkmark"></div>
+      </label>
+    </div>
+        </div>
+
+        <div class="col-md-2 col-xs-6"> 
+            <input class="form-control" name="subject_id[<?php echo $subject->id; ?>]" id="add_subject_id_<?php echo $subject->id; ?>"  type="hidden">
+            <input class="form-control" disabled placeholder="<?php echo $subject->name ?>" type="text">
+        </div>
+
+        <div class="col-md-2 col-xs-6">
+            <input class="form-control" name="exam_mark[<?php echo $subject->id; ?>]" disabled id="add_exam_mark_<?php echo $subject->id; ?>" value="<?php echo isset($post['exam_mark']) ? $post['exam_mark'] : ''; ?>" placeholder="<?php echo $this->lang->line('exam_mark'); ?>" type="text">
+        </div>
+
+        <div class="col-md-2 col-xs-6"> 
+            <input class="form-control add_exam_date" name="exam_date[<?php echo $subject->id; ?>]" disabled id="add_exam_date_<?php echo $subject->id; ?>" value="<?php echo isset($post['exam_date']) ? $post['exam_date'] : ''; ?>" placeholder="<?php echo $this->lang->line('exam_date'); ?>" type="text">
+        </div>
+
+        <div class="col-md-2 col-xs-6"> 
+            <input class="form-control add_start_time" name="start_time[<?php echo $subject->id; ?>]" disabled id="add_start_time_<?php echo $subject->id; ?>" value="<?php echo isset($post['start_time']) ? $post['start_time'] : ''; ?>" placeholder="<?php echo $this->lang->line('start_time'); ?>" type="text">
+        </div>
+
+        <div class="col-md-2 col-xs-6">  
+            <input class="form-control add_end_time" name="end_time[<?php echo $subject->id; ?>]" disabled id="add_end_time_<?php echo $subject->id; ?>" value="<?php echo isset($post['end_time']) ? $post['end_time'] : ''; ?>" placeholder="<?php echo $this->lang->line('end_time'); ?>" type="text">
+        </div>
+
+        <div class="col-md-1 col-xs-6">  
+            <input class="form-control" name="room_no[<?php echo $subject->id; ?>]" disabled id="room_no_<?php echo $subject->id; ?>" value="<?php echo isset($post['room_no']) ? $post['room_no'] : ''; ?>" placeholder="<?php echo $this->lang->line('room_no'); ?>" type="text">
+        </div>
+    </div>
+<?php endforeach; ?>
+
+<script>
+
+     
+
+$('.add_exam_date').datepicker();  
+
+$('.add_start_time').timepicker('setTime', '10:00 AM');
+
+$('.add_end_time').timepicker('setTime', '12:00 PM'); 
+
+
+$(document).ready(function() {
+    $('input[type="checkbox"]').change(function() {
+        var id = $(this).attr('id').split('_')[2]; // Extract the id from the checkbox ID
+        var isChecked = $(this).is(':checked');
+
+        // Enable or disable the fields based on the checkbox state
+        $('#add_subject_id_' + id).val(id).prop('required', isChecked);
+        $('#add_exam_mark_' + id).prop('disabled', !isChecked).prop('required', isChecked);
+        $('#add_exam_date_' + id).prop('disabled', !isChecked).prop('required', isChecked);
+        $('#add_start_time_' + id).prop('disabled', !isChecked).prop('required', isChecked);
+        $('#add_end_time_' + id).prop('disabled', !isChecked).prop('required', isChecked);
+        $('#room_no_' + id).prop('disabled', !isChecked).prop('required', isChecked);
+
+        // Check if any checkbox is checked
+        if ($('input[type="checkbox"]:checked').length > 0) {
+            $('#submit_button').show();
+        } else {
+            $('#submit_button').hide();
+        }
+    });
+
+    // Initial check to show or hide the submit button on page load
+    if ($('input[type="checkbox"]:checked').length > 0) {
+        $('#submit_button').show();
+    } else {
+        $('#submit_button').hide();
+    }
+});
+
+
+
+</script>
+

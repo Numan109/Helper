@@ -1,0 +1,25 @@
+ $combo_offers = DB::table('devs_products as P')
+    ->select(
+        'P.*', 
+        'C.parent_id', 
+        'PQ.quantity as product_qty'
+    )
+    ->join('devs_categories as C', 'P.category_id', '=', 'C.id')
+    ->join('devs_product_store_qty as PQ', 'PQ.product_id', '=', 'P.id')
+    ->where('P.p_store_id', store_id())
+    ->where('P.type', 'combo')
+    ->orderBy('P.id', 'DESC')
+    ->limit(15)
+    ->get()
+    ->map(function($product) {
+        $product->combo_items = DB::table('devs_combo_items as CI')
+        ->select(
+            'CI.*', 
+            'DP.name',  
+        )
+            ->join('devs_products as DP', 'CI.item_code', '=', 'DP.code')
+            ->where('CI.product_id', $product->id)
+            ->get()->toArray();
+        return $product;
+    })
+    ->toArray();

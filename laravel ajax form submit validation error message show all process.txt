@@ -1,0 +1,201 @@
+  <div class="modal fade" id="add_address_modal" tabindex="-1" aria-labelledby="add_address_modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="add_address_modalLabel">Add Address</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="userAddressForm" data-url="{{ route('user.address.add') }}">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="city">City</label>
+                                    <select name="city" id="city" class="form-control"> 
+                                        <option value="Dhaka">Dhaka</option>
+                                        <option value="Mymensingh">Mymensingh</option>
+                                        <option value="Chattagram">Chattagram</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="city_error"></div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="area">Area</label>
+                                    <input type="text" name="area" class="form-control" id="area">
+                                    <div class="invalid-feedback" id="area_error"></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="floor">Floor</label>
+                                    <input type="text" name="floor" class="form-control" id="floor">
+                                    <div class="invalid-feedback" id="floor_error"></div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="house">House</label>
+                                    <input type="text" name="house" class="form-control" id="house">
+                                    <div class="invalid-feedback" id="house_error"></div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="block_sector">Block/Sector</label>
+                                    <input type="text" name="block_sector" class="form-control" id="block_sector">
+                                    <div class="invalid-feedback" id="block_sector_error"></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="avenue">Avenue</label>
+                                    <input type="text" name="avenue" class="form-control" id="avenue">
+                                    <div class="invalid-feedback" id="avenue_error"></div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="road_street">Road/Street</label>
+                                    <input type="text" name="road_street" class="form-control" id="road_street">
+                                    <div class="invalid-feedback" id="road_street_error"></div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="flat">Flat</label>
+                                    <input type="text" name="flat" class="form-control" id="flat">
+                                    <div class="invalid-feedback" id="flat_error"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="other">Other</label>
+                                <input type="text" name="other" class="form-control" id="other" placeholder="1234 Main St">
+                                <div class="invalid-feedback" id="other_error"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery_note">Delivery Note</label>
+                                <textarea name="delivery_note" class="form-control" id="delivery_note" rows="3"></textarea>
+                                <div class="invalid-feedback" id="delivery_note_error"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+======================================================================
+
+$("#userAddressForm").on("submit", function (event) {
+    event.preventDefault();
+    var form = $(this);
+    var url = form.data("url");
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: form.serialize(),
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            // Clear previous error messages
+            $(".invalid-feedback").text("");
+            $(".form-control").removeClass("is-invalid");
+
+            if (response.success) {
+                console.log(response);
+                // Close the modal, update the UI, etc.
+            } else {
+                // Display validation errors
+                var errors = response.errors;
+                for (var field in errors) {
+                    $("#" + field).addClass("is-invalid");
+                    $("#" + field + "_error").text(errors[field][0]);
+                }
+            }
+        },
+        error: function (xhr) {
+            console.log(xhr.responseText);
+        },
+    });
+});
+
+=================================================================================
+Route::post('user-address-add', [CustomAuthController::class, 'user_address_add'])->name('user.address.add');
+=====================================================================================
+
+    public function user_address_add(Request $request)
+    {
+        $validator = $this->customer_address_validation($request);
+
+
+	//If you want to use custom validation like as callback function 
+  	//$validator->after(function ($validator) use ($request) {
+
+            //$checkStatus = Invoice::where('id', $request->invoice_id )->select('status')->get()->first();
+           // if ($checkStatus->status == 'unpaid') {
+             //   $validator->errors()->add('invoice_id', 'This invoice has already been paid.');
+            //}
+    
+            // Add more custom validation logic as needed
+       // });
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+                'code' => 422
+            ]);
+        } 
+    
+        $customer_address_data = $this->customer_address_data($request);
+    
+        $insert = DB::table('web_user_addresses')->insert($customer_address_data);
+    
+        if ($insert) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Address added successfully',
+                'data' => $customer_address_data,
+                'code' => 200
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'data' => [],
+                'code' => 500
+            ]);
+        }
+    }
+    
+    private function customer_address_validation(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'city' => 'required',
+            'area' => 'required',
+            'floor' => 'required',
+            'house' => 'required|max:255',
+            'block_sector' => 'required',
+            'avenue' => 'required',
+            'road_street' => 'required',
+            'flat' => 'required',
+            'other' => 'required|max:255',
+            'delivery_note' => 'required|max:500',
+        ]);
+    }
+    
+    private function customer_address_data(Request $request)
+    {
+        return [
+            'user_id' => Session::get('customer')->id,
+            'city' => $request->city,
+            'area' => $request->area,
+            'floor' => $request->floor,
+            'house' => $request->house,
+            'block_sector' => $request->block_sector,
+            'avenue' => $request->avenue,
+            'road_street' => $request->road_street,
+            'flat' => $request->flat,
+            'other' => $request->other,
+            'delivery_note' => $request->delivery_note,
+        ];
+    }
+    
+

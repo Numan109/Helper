@@ -1,0 +1,87 @@
+composer require laracasts/flash
+php artisan vendor:publish --provider="Laracasts\Flash\FlashServiceProvider"
+
+=============================================================================================
+In your controller, you can set up flash messages like this:
+if ($insert) {
+    flash('Insert Success')->success();
+} else {
+    flash('Oops! Something is wrong.')->error();
+}
+=====================================================================
+Include the following in your Blade template where you want the flash messages to appear:
+@include('flash::message')
+
+
+=============================================================================================
+Example: Customizing message.blade.php
+Open resources/views/vendor/flash/message.blade.php and modify it to fit your design preferences. Here's an example of how you can customize it:
+
+@foreach (session('flash_notification', collect())->toArray() as $message)
+    @if ($message['overlay'])
+        @include('flash::modal', [
+            'modalClass' => 'flash-modal',
+            'title'      => $message['title'],
+            'body'       => $message['message']
+        ])
+    @else
+        <div class="custom-flash-message alert
+                    alert-{{ $message['level'] }}
+                    {{ $message['important'] ? 'alert-important' : '' }}"
+                    role="alert"
+                    style="position: relative; padding-right: 35px;"
+        >
+            <button type="button"
+                    class="close"
+                    onclick="$(this).parent().fadeOut('slow');"
+                    aria-hidden="true"
+                    style="position: absolute; font-size: 28px; right: 10px;"
+            >&times;</button>
+
+            {!! $message['message'] !!}
+        </div>
+    @endif
+@endforeach
+
+{{ session()->forget('flash_notification') }}
+
+=============================================================================
+
+
+.custom-flash-message{
+  position: fixed !important;
+    z-index: 999999999999 !important;
+    border-radius: 5px !important;
+    box-shadow: rgb(0 0 0 / 86%) 1.95px 1.95px 2.6px !important;
+    top: 5px !important;
+    left: 5px !important; 
+    width: 20% !important;
+    color: #fff !important;
+    font-size: medium !important;
+}
+
+.alert-success {
+  background-color: #28a745 !important; /* Green */
+  border-color: #28a745 !important;
+}
+
+/* Error message */
+.alert-error {
+  background-color: #dc3545 !important; /* Red */
+  border-color: #dc3545 !important;
+}
+
+/* Warning message */
+.alert-warning {
+  background-color: #ffc107 !important; /* Yellow */
+  border-color: #ffc107 !important;
+}
+.alert-danger {
+  background-color: #ffc107 !important; /* Yellow */
+  border-color: #ffc107 !important;
+}
+========================================================================================
+// Auto dismiss flash messages after 5 seconds
+setTimeout(function() {
+    $(".custom-flash-message").fadeOut('slow');
+}, 5000);

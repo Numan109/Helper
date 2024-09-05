@@ -1,0 +1,62 @@
+// month serial convert like as ["02-2024","03-2024","04-2024","06-2024","07-2024","08-2024"]  feb-apr24, jun-aug24
+   
+
+ function convertDateRanges($dates)
+    {
+        $monthNames = [
+            '01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May', '06' => 'Jun',
+            '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'
+        ];
+
+        $result = [];
+        $year = '';
+        $range = [];
+
+        foreach ($dates as $date) {
+            list($month, $yearPart) = explode('-', $date);
+            $monthName = $monthNames[$month];
+
+            if ($year !== $yearPart || !empty($range) && intval($month) != (intval(array_key_last($range)) + 1)) {
+                if (!empty($range)) {
+                    $result[] =$this->formatRange($range, $year);
+                }
+                $range = [$month => $monthName];
+                $year = $yearPart;
+            } else {
+                $range[$month] = $monthName;
+            }
+        }
+
+        if (!empty($range)) {
+            $result[] = $this->formatRange($range, $year);
+        }
+
+        return $result;
+    }
+ 
+ 
+
+    function formatRange($range, $year)
+    {
+        $start = reset($range);
+        $end = end($range);
+        $formattedYear = substr($year, -2);
+        if (count($range) > 1) {
+            return "$start-$end$formattedYear";
+        }
+        return "$start$formattedYear";
+    }
+ 
+
+public function index(){
+    $dates =  ["02-2024","03-2024","04-2024","06-2024","07-2024","08-2024"];
+   
+    $formattedRanges = $this->convertDateRanges($dates);
+ 
+    _d(implode(", ", $formattedRanges), $ex=true);
+
+
+    foreach ($formattedRanges as $range) {
+        echo $range . "\n";
+    }
+}
