@@ -1,0 +1,118 @@
+composer require anhskohbo/no-captcha
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+======================// .env file update==============================
+NOCAPTCHA_SITEKEY=6Lf3UxsqAAAAACTJCeWa1R58DKNQjHfyGPfpNw4Y
+NOCAPTCHA_SECRET=6Lf3UxsqAAAAALJPqnDndgHNriTjOmdvdbf0itle
+
+
+=========================view file=================================
+
+  <div class="form-control">
+              {!! NoCaptcha::display() !!}
+              @error('g-recaptcha-response')
+              <span class="text-red-500 text-sm">{{ $message }}</span>
+              @enderror
+            </div>
+
+
+=====================validation ==============================
+ 'g-recaptcha-response' => 'required|captcha',
+
+
+
+
+
+
+
+
+
+
+
+
+
+Install the reCAPTCHA package:
+
+You can use a package like anhskohbo/no-captcha to integrate Google reCAPTCHA into your Laravel project. Run the following command to install it via Composer:
+
+bash
+Copy code
+composer require anhskohbo/no-captcha
+Add your reCAPTCHA credentials to the .env file:
+
+After registering your site on the Google reCAPTCHA Admin console, add the site key and secret key to your .env file:
+
+env
+Copy code
+NOCAPTCHA_SITEKEY=your-site-key
+NOCAPTCHA_SECRET=your-secret-key
+Add the ServiceProvider to your config/app.php:
+
+Laravel 5.5+ uses package auto-discovery, so this step might not be necessary, but in case it's not added automatically, add it manually:
+
+php
+Copy code
+'providers' => [
+    // Other Service Providers
+
+    Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
+],
+Use the reCAPTCHA field in your form:
+
+In your Blade template, add the reCAPTCHA field to your form:
+
+html
+Copy code
+<form method="POST" action="{{ route('contact.submit') }}">
+    @csrf
+    
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" class="form-control" id="phone" name="phone" required>
+    </div>
+
+    <div class="form-group">
+        {!! NoCaptcha::display() !!}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+Validate the reCAPTCHA response:
+
+In your controller, validate the reCAPTCHA response along with the form fields:
+
+php
+Copy code
+use Illuminate\Http\Request;
+use Mail;
+use Anhskohbo\NoCaptcha\Facades\NoCaptcha;
+
+public function submitContactForm(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email',
+        'phone' => 'required',
+        'g-recaptcha-response' => 'required|captcha',
+    ]);
+
+    // Send the email
+    Mail::send([], [], function ($message) use ($request) {
+        $message->to('your-email@example.com')
+                ->subject('New Contact Us Form Submission')
+                ->setBody("Name: {$request->name}\nEmail: {$request->email}\nPhone: {$request->phone}");
+        $message->from($request->email, $request->name);
+    });
+
+    return back()->with('success', 'Thank you for contacting us.');
+}
