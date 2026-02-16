@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class SubsidyRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'donar_id' => 'required', // No uniqueness needed for donar_id alone
+            'category_id' => [
+                'required',
+                Rule::unique('subsidies')->where(function ($query) {
+                    return $query->where('donar_id', $this->donar_id);
+                })->ignore($this->subsidy), // Ignore the current subsidy when updating
+            ],
+            'amount' => 'required|numeric|min:0', // Ensure amount is numeric and positive
+        ];
+    }
+
+    /**
+     * Custom messages for validation errors.
+     */
+    public function messages()
+    {
+        return [
+            'category_id.unique' => 'The combination of Donar and Category already exists.',
+        ];
+    }
+}

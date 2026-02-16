@@ -1,0 +1,13 @@
+
+        $sms_recharge_info = $this->db->select('SR.*, 
+        COALESCE((SELECT SUM(sms_count) 
+                  FROM sms 
+                  WHERE recharge_id = SR.id), 0) as total_sms_count, 
+        (SR.total_sms - 
+         COALESCE((SELECT SUM(sms_count) 
+                   FROM sms 
+                   WHERE recharge_id = SR.id), 0)) as have_sms')
+    ->from('sms_recharges as SR')
+    ->where('SR.status', 1)
+    ->get()
+    ->result();

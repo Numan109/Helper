@@ -1,0 +1,11 @@
+Route::get('/cache-clear', function () {
+    try {
+        Artisan::call('optimize:clear');
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        return "Cache cleared successfully.";
+    } catch (\Exception $e) {
+        return "An error occurred while clearing the cache: " . $e->getMessage();
+    }
+});

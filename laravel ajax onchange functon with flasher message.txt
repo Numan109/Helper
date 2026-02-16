@@ -1,0 +1,107 @@
+Flasher packege Install for ajax message
+
+composer require php-flasher/flasher-laravel
+php artisan vendor:publish --tag=flasher
+
+
+ <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+view-------------------------------------------
+
+ <select class="form-select" id="school_id" name="school_id" onchange="schoolWiseClass(this.value)" aria-label="Default select example">
+                                <option selected>--Select--</option>
+                                @foreach($schools as $key=> $school)
+                                <option value="{{ $school->id }}">{{ $school->title }}</option>
+                                @endforeach
+                              </select>
+
+
+
+
+
+script------------------------------------------------------------------------
+
+<script>
+   function schoolWiseClass(schoolId) {
+    if (schoolId) {
+        $.ajax({
+            url: '{{ route('school.classes', ':id') }}'.replace(':id', schoolId),
+            type: 'GET',
+            success: function(data) {
+                if (data.status) {
+                    $('#class_id').html(data.data); // Inject the HTML options into the select element
+                    toastr.success(data.message); // Show success message with Toastr
+                } else {
+                    toastr.error(data.message); // Show error message with Toastr
+                }
+            },
+            error: function(xhr) {
+                // Optionally display the response message in case of error
+                let errorMessage = xhr.responseJSON?.message || 'Unable to retrieve classes. Please try again later.';
+                toastr.error(errorMessage); // Show error message with Toastr
+            }
+        });
+    } else {
+        $('#class_id').empty().append('<option value="">Select Class</option>');
+    }
+}
+
+
+</script>
+
+
+Controller -------------------------------------------------------------------
+
+ public function getSchoolClasses($school_id)
+    {
+        try {
+            // Select specific columns from the `schools` table and eager load classes
+            $school = School::with(['classes' => function ($query) {
+                // Select specific columns from the `classes` table
+                $query->select('id', 'title', 'school_id'); // Ensure 'school_id' is included to maintain relationship
+            }])
+            ->select('id', 'title') // Select specific columns from the `schools` table
+            ->where('id', $school_id)
+            ->first();
+
+            // Ensure the school exists
+            if (!$school) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'School not found',
+                    'code' => 404
+                ]);
+            }
+
+            // Render the partial view with the classes
+            $html = view('layouts.scripts/renders.class-options', ['classes' => $school->classes])->render();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data retrieved successfully',
+                'data' => $html,
+                'code' => 200
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred',
+                'data' => $e->getMessage(),
+                'code' => 500
+            ]);
+        }
+    }
+
+
+
+
+render page php---------------------------------------------
+
+
+{{-- resources/views/layouts/renders/class-options.blade.php --}}
+<option value="">Select Class</option>
+@foreach ($classes as $class)
+    <option value="{{ $class->id }}">{{ $class->title }}</option>
+@endforeach

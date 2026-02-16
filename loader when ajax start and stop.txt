@@ -1,0 +1,15 @@
+	<div id="global-overlay" style=" display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 9998; "></div>
+
+  	<div id="global-loader" style=" display: none; font-size: 16px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; background: #fff; padding: 20px 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.2); ">
+        	<i class="fa fa-spinner fa-spin"></i> Loading...
+    	</div>
+
+	<script>
+   		$(document).ajaxStart(function() {
+            		$('#global-overlay, #global-loader').show();
+        	});
+
+        	$(document).ajaxStop(function() {
+            		$('#global-overlay, #global-loader').hide();
+        	});
+    	</script>

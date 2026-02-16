@@ -1,0 +1,36 @@
+<div class="form-group col-md-6 text-center">
+    <label for="picture"><?php echo trans('lang.picture'); ?></label>
+
+    <!-- Image Preview -->
+    <div id="imagePreview" 
+         class="border rounded d-flex align-items-center justify-content-center mx-auto mb-2"
+         style="width: 80px; height: 60px; background-color: #f8f9fa;">
+        <span class="text-muted">Image</span>
+    </div>
+
+    <!-- Custom File Upload Button -->
+    <label class="btn btn-primary btn-sm">
+        <?php echo trans('lang.image_upload'); ?>
+        <input type="file" name="picture" id="picture" accept="image/*" hidden>
+    </label>
+</div>
+
+
+<script>
+document.getElementById('picture').addEventListener('change', function (event) {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = ''; // Clear existing content
+
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.height = '50px';
+        img.style.objectFit = 'contain';
+        img.classList.add('img-fluid');
+        preview.appendChild(img);
+    } else {
+        preview.innerHTML = '<span class="text-muted">No valid image selected</span>';
+    }
+});
+</script>

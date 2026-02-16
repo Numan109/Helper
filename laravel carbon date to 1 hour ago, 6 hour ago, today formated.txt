@@ -1,0 +1,7 @@
+ @php
+   $createdAt = \Carbon\Carbon::parse($activity->created_at);
+ @endphp
+
+
+<h6 class="mb-0 text-{{ getcolors()[$key] ?? 'primary' }}">{{ $createdAt->diffForHumans() }}</h6>
+<small class="text-muted">{{ $createdAt->isToday() ? 'Today' : $createdAt->toFormattedDateString() }}</small>

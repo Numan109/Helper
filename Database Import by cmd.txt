@@ -1,0 +1,1 @@
+mysql -u root -p v1bidya_new < "E:\Bidyaan\DB Backup\u421456551_ru06EuEDk_aotoroutine.sql"

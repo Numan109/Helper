@@ -1,0 +1,10 @@
+$query = $this->db->get();
+
+if (!$query) {
+    // Output last query for debugging
+    echo "Last Query: " . $this->db->last_query() . "\n";
+    // Output database error message
+    $error = $this->db->error();
+    echo "Database Error: " . $error['message'] . "\n";
+    exit;
+}

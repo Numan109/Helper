@@ -6,3 +6,16 @@
     
 }
 </style>
+
+@media print {
+    @page {
+        size: landscape;
+        margin: 0; /* Optional: removes default browser print margins */
+    }
+
+    body {
+        transform: scale(0.60); /* 60% scale */
+        transform-origin: top left; /* Anchor scaling from top-left corner */
+        width: 166.67%; /* Compensate width shrink (1 / 0.60 ≈ 1.6667) */
+    }
+}
